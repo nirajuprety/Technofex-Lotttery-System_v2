@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Welcome page";
+}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Welcome Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Calibri;
+            background: #9fc3d1;
+        }
+
+        .welcometext {
+            text-align: center;
+        }
+        .trademark{
+            position: fixed;
+            bottom: 0; /* Adjust the distance from the bottom */
+            right: 0; /* Adjust the distance from the right */
+            width: 250px; /* Adjust the image width as needed */
+            height: 20px; /* Adjust the image height as needed */
+            z-index: 999;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="welcometext">
+        <img src="~/img/logo.png">
+        <h1 style="font-family : fantasy;">Welcome to Technofex Lottery System</h1>
+        <p style="font-family : sans-serif; font-size:25px;"  >Click Start to test your luck today !</p>
+        <form method="get" enctype="multipart/form-data" action="@Url.Action("UploadExcel", "LotterySystem")">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-start">Start</button>
+                <p style ="font-family : sans-serif; font-size:20px;" class="trademark">  Made by DotNet Interns</p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

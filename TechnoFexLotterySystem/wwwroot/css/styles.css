@@ -1,0 +1,90 @@
+﻿/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 400px;
+    margin: 100px auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.winner {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.slot-machine {
+    display: inline-block;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.slot-item {
+    display: block;
+    animation: spin 3s ease-out;
+    animation-fill-mode: forwards;
+}
+
+/* Add this keyframes animation for slot machine spinning */
+@keyframes roll-in {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.btn-back {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+    .btn-back:hover {
+        background-color: #545b62;
+    }
+
+
+/*added herer*/
+.slot-machine {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+}
+
+.slot-item {
+    display: inline-block;
+    padding: 0 1rem;
+    font-size: 2rem;
+    animation: slotMachineSpin 3s infinite linear;
+}
+
+/*another added*/
+.slot-machine .slot-item {
+    display: inline-block;
+    animation: roll-in 1s forwards;
+}
+
+/*---*/
+
+@keyframes slotMachineSpin {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-100%);
+    }
+}

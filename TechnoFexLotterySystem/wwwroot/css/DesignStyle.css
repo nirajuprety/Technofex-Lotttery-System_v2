@@ -1,0 +1,39 @@
+﻿/* Additions for suspenseful animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.suspense-message {
+    font-size: 2rem;
+    color: #fff;
+    animation: fadeIn 1s ease forwards;
+    display: none;
+}
+
+    .suspense-message.show {
+        display: block;
+    }
+
+.countdown-animation {
+    animation: zoomIn 0.5s ease forwards;
+}

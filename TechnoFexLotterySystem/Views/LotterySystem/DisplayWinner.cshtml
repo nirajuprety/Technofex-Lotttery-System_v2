@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Machine Digits</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('TechnoFexLotterySystem\wwwroot\img\canvas.gif');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .bgg {
+            background-color: #9fc3d1;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .slot-item {
+            font-size: 36px;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            margin: 5px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            color: darkblue;
+            font-family: 'clarendon-bold', sans-serif;
+        }
+
+            .slot-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 30px; /* Adjust this height to control the shadow size */
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)); /* Adjust the opacity and colors as needed */
+            }
+
+            /* Shadow on bottom */
+            .slot-item::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 30px; /* Adjust this height to control the shadow size */
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)); /* Adjust the opacity and colors as needed */
+            }
+
+        .winner {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ae6851;
+            font-family: 'Special Elite', cursive;
+        }
+
+        .leftimage {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+        }
+
+        .btn-back {
+            padding: 10px 20px; /* Adjust the padding to control the button size */
+            background-color: #007bff; /* Customize the button background color */
+            color: #ffffff; /* Customize the button text color */
+            border-radius: 5px; /* Add rounded corners to the button */
+            font-size: 16px; /* Adjust the font size as needed */
+            text-decoration: none; /* Remove the default underline */
+            transition: background-color 0.2s; /* Add a smooth transition effect */
+        }
+
+        .bottom-right-image {
+            position: fixed;
+            bottom: 20px; /* Adjust the distance from the bottom */
+            right: 20px; /* Adjust the distance from the right */
+            width: 300px; /* Adjust the image width as needed */
+            height: 50px; /* Adjust the image height as needed */
+            z-index: 999; /* Set a higher z-index to make sure it stays above other elements */
+        }
+    </style>
+</head>
+<body class="bgg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <!-- Center the winner text -->
+                <div style="color: darkblue; font-family: 'Iceland', cursive; ">
+                    <h1 style="font-size: 5rem;">TECHNOFEX LOTTERY SYSTEM</h1>
+                </div>
+            </div>
+        </div>
+
+        <div id="countdown" style="font-size: 100px; color: darkblue;"></div>
+
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <!-- Center the winner text -->
+                <div class="winner" style="display: none;">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <img src="~/img/stars.gif" class="" width="" height="300px">
+                        </div>
+                        <div class="col-lg-4">
+                            <h1>Congratulations, <strong><span id="winnerName"></span></strong> </h1>
+                            <h1>You have Won Rs. <strong><span id="totalAmount">@ViewBag.TotalAmount</span></strong> </h1>
+                        </div>
+                        <div class="col-lg-4">
+                            <img src="~/img/stars.gif" class="" width="" height="300px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="slot-machine">
+                    @foreach (var digit in ViewBag.WinnerNumber)
+                    {
+                        <div class="slot-item text-center" style="opacity: 0;"></div> <!-- Empty div for each digit -->
+                    }
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <!-- Center the Back button -->
+                <div class="form-group">
+                    <a href="javascript:history.back()" class="btn btn-secondary btn-back">Back</a>
+                    <img src="~/img/logo.png" alt="Bottom Right Image" class="bottom-right-image" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const HASHED_DISPLAY_DURATION = 3000;
+
+        const digits = '@ViewBag.WinnerNumber';    // Convert the digits to a string
+        const slotItems = document.querySelectorAll('.slot-item');
+        let index = 0;
+        let congratulated = false; // Flag to track if the congratulatory message has been displayed
+
+        let countdownValue = 10; // Initial countdown value
+
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+
+            if (countdownValue > 0) {
+                countdownElement.textContent = countdownValue;
+                countdownValue--;
+                setTimeout(updateCountdown, 1000); // Update countdown every second
+            } else {
+                countdownElement.style.display = 'none'; // Hide the countdown element
+                displayNextDigit(); // Start displaying digits after countdown finishes
+            }
+        }
+
+        function displayNextDigit() {
+            if (index < digits.length) {
+                const digit = digits.charAt(index);
+                const slotItem = slotItems[index];
+
+                if (index === 0 || index === 1 || index === 5||index === digits.length - 2) {
+                    // Display the first two and third-to-last digits as is
+                    slotItem.innerText = digit;
+                } else {
+                    // Display other digits as #
+                    slotItem.innerText = '#';
+                }
+
+                slotItem.style.opacity = '1'; // Make the digit visible
+                index++;
+
+                setTimeout(() => {
+                    displayNextDigit();
+                }, 3000); // 3000 milliseconds (0.5 seconds) interval
+            } else {
+                setTimeout(() => {
+                    revealPhoneNumber(); // After displaying hashed numbers, reveal the actual phone number
+                }, HASHED_DISPLAY_DURATION);
+            }
+        }
+
+        function revealPhoneNumber() {
+            for (let i = 0; i < digits.length; i++) {
+                const slotItem = slotItems[i];
+                slotItem.innerText = digits.charAt(i); // Display the actual digit
+                slotItem.style.opacity = '1'; // Make the digit visible
+            }
+            setTimeout(() => {
+                showWinnerInfo(); // Display winner name and number after revealing the phone number
+            }, 3000); // 3000 milliseconds (3 seconds) interval
+        }
+
+        function showWinnerInfo() {
+            document.querySelector('.winner').style.display = 'block';
+            document.getElementById('winnerName').innerText = '@ViewBag.WinnerName';
+            document.getElementById('winnerNumber').innerText = '@ViewBag.WinnerNumber';
+            document.getElementById('totalAmount').innerText = '@ViewBag.TotalAmount';
+        }
+
+        // Start the countdown when the page loads
+        updateCountdown();
+    </script>
+
+
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Iceland&family=Jockey+One&family=Silkscreen&family=Slackey&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://www.dafontfree.net/embed/Y2xhcmVuZG9uLWJvbGQmZGF0YS8xL2MvOTIvdW5pY29kZS5jbGFyZW5kYi50dGY" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
